@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorter Query CSV</title>
+  <style>
+    textarea { width: 300px; height: 120px; margin: 10px; display: block; }
+    button { margin: 10px; padding: 8px 16px; }
+    pre { background: #f4f4f4; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Sorter Hasil Query</h2>
+  
+  <label>Value WHERE:</label>
+  <textarea id="whereValues">4321
+4774
+4645</textarea>
+  
+  <label>CSV Hasil Query:</label>
+  <textarea id="csvInput">id, username
+4321,bagus
+4645,wijaksono
+4774,muhammad</textarea>
+  
+  <label>Index Kolom untuk Sort (0 = kolom pertama):</label>
+  <input type="number" id="colIndex" value="0" min="0">
+  
+  <button onclick="sortCSV()">Sort</button>
+  
+  <h3>Hasil:</h3>
+  <pre id="output"></pre>
+  
+  <script>
+    function sortCSV() {
+      const whereValues = document.getElementById('whereValues').value.trim().split(/\s+/);
+      const csvLines = document.getElementById('csvInput').value.trim().split('\n');
+      const colIndex = parseInt(document.getElementById('colIndex').value, 10);
+      
+      const header = csvLines[0];
+      const rows = csvLines.slice(1).map(line => line.split(','));
+      const colCount = header.split(',').length;
+      
+      // Buat map berdasarkan kolom index
+      const map = {};
+      rows.forEach(row => {
+        map[row[colIndex].trim()] = row;
+      });
+      
+      // Susun ulang sesuai urutan whereValues
+      const sortedRows = whereValues.map(val => {
+        const row = map[val.trim()];
+        if (row) {
+          return row.join(',');
+        } else {
+          // Jika tidak ditemukan → not found + jumlah koma sesuai kolom
+          return 'not found' + ','.repeat(colCount - 1);
+        }
+      });
+      
+      // Gabungkan kembali ke CSV
+      const result = [header].concat(sortedRows).join('\n');
+      document.getElementById('output').textContent = result;
+    }
+  </script>
+</body>
+</html>
