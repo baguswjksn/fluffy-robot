@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Show Unique Data</title>
+</head>
+<body>
+  <h3>A Data</h3>
+  <textarea id="dataA" rows="6" cols="30">33355
+44466</textarea>
+
+  <h3>B Data</h3>
+  <textarea id="dataB" rows="6" cols="30">22244
+44466</textarea>
+
+  <br><br>
+  <button onclick="showUnique()">Show Unique Values</button>
+
+  <h3>Unique to A</h3>
+  <pre id="uniqueA"></pre>
+
+  <h3>Unique to B</h3>
+  <pre id="uniqueB"></pre>
+
+  <script>
+    function showUnique() {
+      const dataA = document.getElementById('dataA').value
+        .split(/\n/)
+        .map(v => v.trim())
+        .filter(v => v !== '');
+
+      const dataB = document.getElementById('dataB').value
+        .split(/\n/)
+        .map(v => v.trim())
+        .filter(v => v !== '');
+
+      // Find values unique to each list
+      const uniqueA = dataA.filter(v => !dataB.includes(v));
+      const uniqueB = dataB.filter(v => !dataA.includes(v));
+
+      document.getElementById('uniqueA').textContent = uniqueA.join('\n') || '(none)';
+      document.getElementById('uniqueB').textContent = uniqueB.join('\n') || '(none)';
+    }
+  </script>
+</body>
+</html>
